@@ -21,7 +21,9 @@ class Moneys extends Model
      * @throws \think\exception\DbException
      */
     public function getUserList ($page, $pageSize) {
-        $list = Moneys::page($page, $pageSize)->order('id', 'desc')->select();
+        $list = Moneys::page($page, $pageSize)
+                ->order('id', 'desc')
+                ->select();
         $count = Moneys::count();
         if (!$list) {
             return false;
@@ -66,6 +68,12 @@ class Moneys extends Model
         return $userInfo;
     }
 
+    /**
+     * 修改资金流水个人信息
+     * @param $id
+     * @param $data
+     * @return bool
+     */
     public function editUserList ($id, $data) {
         $money = new Moneys();
         $res = $money->save($data, ['id' => $id]);
@@ -73,5 +81,21 @@ class Moneys extends Model
             return false;
         }
         return $res;
+    }
+
+    /**
+     * 通过用户名查询单个用户信息
+     * @param $username
+     * @return array|null|\PDOStatement|string|Model
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function searchUserList ($username) {
+        $user = Moneys::where('username', $username)->find();
+        if (!$user) {
+            return false;
+        }
+        return $user;
     }
 }

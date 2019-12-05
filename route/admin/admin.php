@@ -18,5 +18,6 @@ Route::group('admin', function () {
         Route::get('read', '@admin/money/read')->name('admin/money/read');
         Route::put('/', '@admin/money/update')->name('admin/money/update');
         Route::delete('/', '@admin/money/delete')->name('admin/money/delete');
+        Route::get('search', '@admin/money/search')->name('admin/money/search');
     });
 })->allowCrossDomain();

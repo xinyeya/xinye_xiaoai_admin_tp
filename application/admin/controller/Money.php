@@ -4,7 +4,6 @@ namespace app\admin\controller;
 
 use app\admin\model\Moneys;
 use think\Controller;
-use think\Db;
 use think\Request;
 
 class Money extends Controller
@@ -89,7 +88,6 @@ class Money extends Controller
     /**
      * 删除指定资源
      *
-     * @param  int  $id
      * @return \think\Response
      */
     public function delete(Request $request)
@@ -98,5 +96,20 @@ class Money extends Controller
         $money = new Moneys();
         $res = $money->delUserList($id);
         return json($res);
+    }
+
+    /**
+     * 查询用户信息
+     * @param Request $request
+     * @return \think\response\Json
+     */
+    public function search (Request $request) {
+        $username = $request->get('username');
+        $money = new Moneys();
+        $userinfo = $money->searchUserList($username);
+        if (!$userinfo) {
+            return json(['msg' => '找不到此用户信息']);
+        }
+        return json($userinfo);
     }
 }
