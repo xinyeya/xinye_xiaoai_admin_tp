@@ -18,19 +18,9 @@ class Money extends Controller
     {
         $page = $request->get('page');
         $pageSize = $request->get('pageSize');
-        $list = Db::name('money_water')->page($page, $pageSize)->order('id','desc')->select();
-        $count = Db::name('money_water')->count();
-        return json(['data' => $list, 'count' => $count]);
-    }
-
-    /**
-     * 显示创建资源表单页.
-     *
-     * @return \think\Response
-     */
-    public function create()
-    {
-        //
+        $money = new Moneys();
+        $data = $money->getUserList($page, $pageSize);
+        return json($data);
     }
 
     /**
@@ -56,28 +46,6 @@ class Money extends Controller
     }
 
     /**
-     * 显示指定的资源
-     *
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function read($id)
-    {
-        //
-    }
-
-    /**
-     * 显示编辑资源表单页.
-     *
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * 保存更新的资源
      *
      * @param  \think\Request  $request
@@ -95,8 +63,11 @@ class Money extends Controller
      * @param  int  $id
      * @return \think\Response
      */
-    public function delete($id)
+    public function delete(Request $request)
     {
-        //
+        $id = $request->delete('id');
+        $money = new Moneys();
+        $res = $money->delUserList($id);
+        return json($res);
     }
 }
