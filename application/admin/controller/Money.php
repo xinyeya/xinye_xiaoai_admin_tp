@@ -36,7 +36,8 @@ class Money extends Controller
         $expend = $request->post('expend');
         $incomeType = $request->post('incomeType');
         $accountCash = $request->post('accountCash');
-        $data = ['username' => $username, 'income' => $income, 'expend' => $expend, 'incomeType' => $incomeType, 'accountCash' => $accountCash, 'investTime' => date('Y-m-d h:i:s', time())];
+        $remark = $request->post('remark');
+        $data = ['username' => $username, 'income' => $income, 'expend' => $expend, 'incomeType' => $incomeType, 'accountCash' => $accountCash, 'investTime' => date('Y-m-d h:i:s', time()), 'remark' => $remark];
         $money = new Moneys();
         $res = $money->addUserList($data);
         if (!$res){
@@ -52,9 +53,37 @@ class Money extends Controller
      * @param  int  $id
      * @return \think\Response
      */
-    public function update(Request $request, $id)
+    public function read(Request $request)
     {
-        //
+        $id = $request->get('id');
+        $money = new Moneys();
+        $userInfo = $money->readUserList($id);
+        return json($userInfo);
+    }
+
+    /**
+     * 保存更新的资源
+     *
+     * @param  \think\Request  $request
+     * @param  int  $id
+     * @return \think\Response
+     */
+    public function update(Request $request)
+    {
+        $id = $request->get('id');
+        $username = $request->put('username');
+        $income = $request->put('income');
+        $expend = $request->put('expend');
+        $incomeType = $request->put('incomeType');
+        $accountCash = $request->put('accountCash');
+        $remark = $request->put('remark');
+        $money = new Moneys();
+        $data = ['username' => $username, 'income' => $income, 'expend' => $expend, 'incomeType' => $incomeType, 'accountCash' => $accountCash, '$remark' => $remark];
+        $res = $money->editUserList($id, $data);
+        if (!$res) {
+            return json(['msg' => '修改失败']);
+        }
+        return $res;
     }
 
     /**
