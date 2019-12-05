@@ -4,6 +4,7 @@ namespace app\admin\controller;
 
 use app\admin\model\Moneys;
 use think\Controller;
+use think\Db;
 use think\Request;
 
 class Money extends Controller
@@ -13,10 +14,13 @@ class Money extends Controller
      *
      * @return \think\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $list = Moneys::all();
-        return json($list);
+        $page = $request->get('page');
+        $pageSize = $request->get('pageSize');
+        $list = Db::name('money_water')->page($page, $pageSize)->order('id','desc')->select();
+        $count = Db::name('money_water')->count();
+        return json(['data' => $list, 'count' => $count]);
     }
 
     /**
@@ -37,7 +41,18 @@ class Money extends Controller
      */
     public function save(Request $request)
     {
-        //
+        $username = $request->post('username');
+        $income = $request->post('income');
+        $expend = $request->post('expend');
+        $incomeType = $request->post('incomeType');
+        $accountCash = $request->post('accountCash');
+        $data = ['username' => $username, 'income' => $income, 'expend' => $expend, 'incomeType' => $incomeType, 'accountCash' => $accountCash, 'investTime' => date('Y-m-d h:i:s', time())];
+        $money = new Moneys();
+        $res = $money->addUserList($data);
+        if (!$res){
+            return json(['msg' => '添加失败']);
+        }
+        return json($res);
     }
 
     /**
